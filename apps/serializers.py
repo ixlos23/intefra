@@ -1,6 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
+from rest_framework.response import Response
+from rest_framework.serializers import ModelSerializer
+from rest_framework.views import APIView
+
+from apps.models import Film, Genre
 
 
 # Register serializer
@@ -34,3 +39,20 @@ class LoginUserModelSerializer(serializers.Serializer):
 
         attrs['user'] = user
         return attrs
+
+
+class GenreSerializer(ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = ['id', 'name']
+
+
+class FilmSerializer(ModelSerializer):
+    genres = GenreSerializer(source='genre', many=True)
+
+    class Meta:
+        model = Film
+        fields = '__all__'
+
+
+

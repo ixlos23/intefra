@@ -1,6 +1,9 @@
+import datetime
+
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager
 from django.db import models
+from django.db.models import Model, CharField, DateField, ManyToManyField
 
 
 class UserManager(BaseUserManager):
@@ -34,11 +37,15 @@ class User(AbstractUser):
 
     objects = UserManager()  # Set the custom manager
 
-"""
-git init
-git add .
-git commit -m "first commit"
-git branch -M main
-git remote add origin https://github.com/ixlos23/intefra.git
-git push -u origin main
-"""
+
+class Film(Model):
+    title = CharField(max_length=250)
+    release_date = DateField(default=datetime.date.today)
+    genre = ManyToManyField("apps.Genre", related_name="films")
+
+
+class Genre(Model):
+    name = CharField(max_length=250)
+
+    def __str__(self):
+        return self.name
